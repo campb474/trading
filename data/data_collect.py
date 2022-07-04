@@ -1,11 +1,17 @@
 import yfinance as yf
 import os
 import csv
+from datetime import date
+from pathlib import Path  
 
 class Stock:
 
     # Initialize Stock object based off of ticker
     def __init__(self, ticker: str):
+        self.stock = yf.Ticker(ticker)
+        self.sector = self.stock.info['sector']
+        self.PE = self.stock.info['trailingPE']
+        self.beta = self.stock.info['beta']
         self.ticker = ticker
         return
 
@@ -27,9 +33,17 @@ class Stock:
         
         return path
 
-def main():
-    stock = Stock("AAPL")
+    # Collects data on a certain stock ticker from yfinance
+    # Returns true if successful, false otherwise
+    def get_data(self, freq: str = 'max', start: str = '2019-01-01', end: str = date.today()) -> bool:
+        df = yf.download(self.ticker, start = start, end = end)
+        filepath = Path("./raw_data/" + self.ticker + "/" + freq + ".csv")  
+        filepath.parent.mkdir(parents=True, exist_ok=True)  
+        df.to_csv(filepath)  
 
+def main():
+    stock = Stock("AMZN")
+    stock.get_data()
     stock.check_data()
 
 main()
