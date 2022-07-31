@@ -9,9 +9,6 @@ class Stock:
     # Initialize Stock object based off of ticker
     def __init__(self, ticker: str):
         self.stock = yf.Ticker(ticker)
-        self.sector = self.stock.info['sector']
-        self.PE = self.stock.info['trailingPE']
-        self.beta = self.stock.info['beta']
         self.ticker = ticker
         return
 
@@ -42,7 +39,7 @@ class Stock:
         df.to_csv(filepath)  
 
 def main():
-    stock = Stock("AMZN")
+    stock = Stock("IJJ")
     stock.get_data()
     stock.check_data()
 
